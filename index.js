@@ -2,6 +2,8 @@ const express = require("express");
 const api = express();
 const Joi = require("joi")
 
+
+// PRODUCT VALIDATION USING JOI
 const productSchema = Joi.object({
   name: Joi.string().required(),
   price: Joi.number().required(),
@@ -54,7 +56,8 @@ api.get("/product", (req, res) => {
 // GET PRODUCT BY ID
 api.get("/product/:productId",  (req, res) => {
   console.log(req.params);
-  const product = products.find((prod) => prod.id == req.params.productId);
+  const productId = req.params.productId
+  const product = products.find((prod) => prod.id == productId);
   if (!product) {
     return res.status(404).json({
       message: "product not found, no product exist with that id",
@@ -67,26 +70,10 @@ api.get("/product/:productId",  (req, res) => {
 });
 
 
-// DELETE PRODUCT
-api.delete("/product/:productId", (req, res) => {
-  const product = products.findIndex((prod) => prod.id == req.params.productId);
-  if (product !== -1) {
-    product.splice(product, 1)
-
-    return res.status(200).json({
-      message: "product deleted successfully"
-    })
-  } else {
-    return res.status(404).json({
-      message: "Product not found"
-    });
-  }
-})
-
-
 // UPDATE PRODUCT
 api.put("/product/:productId", (req, res) => {
-  const product = products.findIndex((prod) => prod.id == req.params.productId);
+  const productId = req.params.productId
+  const product = products.findIndex((prod) => prod.id == productId);
   const updateProduct = req.body
 
   if (product !== -1){
@@ -101,6 +88,26 @@ api.put("/product/:productId", (req, res) => {
     });
   }
 })
+
+// DELETE PRODUCT
+api.delete("/product/:productId", (req, res) => {
+  const productId = req.params.productId
+  const product = products.findIndex((prod) => prod.id == productId);
+  if (product !== -1) {
+    products.splice(product)
+
+    return res.status(200).json({
+      message: "product deleted successfully"
+    })
+  } else {
+    return res.status(404).json({
+      message: "Product not found"
+    });
+  }
+})
+
+
+
 
 api.listen(4000,  () => {
   console.log("Service listening on port 4000");
