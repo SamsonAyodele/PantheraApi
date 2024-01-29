@@ -1,7 +1,7 @@
 const express = require("express");
+const api = express();
 const sequelize = require("./connection")
 const Product = require("./models/product.model")
-const api = express();
 const { productSchema, productUpdateSchema } = require("./validators/product.validators")
 
 
@@ -56,10 +56,10 @@ api.post("/product", async (req, res) => {
 
 api.get("/product", async (req, res) => {
   // console.log(req.params);
-  const products = await Product.findAll({})
+  const product = await Product.findAll({})
   return res.status(200).json({
     message: "product retrieved successfully",
-    products: products,
+    products: product,
   });
 });
 
@@ -77,7 +77,7 @@ api.get("/product/:productId",  async (req, res) => {
   }
   return res.status(200).json({
     message: "product retrieved",
-    product: product,
+    products: product,
   });
 });
 
@@ -91,7 +91,7 @@ api.put("/product/:productId", async (req, res) => {
     })
   }
   const productId = req.params.productId
-  const product = await products.update(req.body, {
+  const product = await Product.update(req.body, {
     where: {
       id: productId,
     }
@@ -104,6 +104,7 @@ api.put("/product/:productId", async (req, res) => {
  } else {
   return res.status(200).json({
     message: "Product updated successfully",
+    products: productId
    });
  }
   // if (product !== -1){
@@ -124,7 +125,7 @@ api.put("/product/:productId", async (req, res) => {
 api.delete("/product/:productId", async (req, res) => {
   const productId = req.params.productId
   // const product = products.findIndex((prod) => prod.id == productId);
-    const product = await products.destroy({
+    const product = await Product.destroy({
       where: {
         id: productId
       }
@@ -137,7 +138,7 @@ api.delete("/product/:productId", async (req, res) => {
     } else {
       return res.status(200).json({
         message: "product deleted successfully",
-        product: product
+        products: productId
       })
     }
 
